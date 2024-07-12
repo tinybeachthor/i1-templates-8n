@@ -18,3 +18,12 @@ pub trait Template: fmt::Display {
 
     const SIZE_HINT: usize;
 }
+
+impl<T: Template + ?Sized> Template for &T {
+    #[inline]
+    fn render_into(&self, writer: &mut (impl std::fmt::Write + ?Sized)) -> Result<()> {
+        T::render_into(self, writer)
+    }
+
+    const SIZE_HINT: usize = T::SIZE_HINT;
+}

@@ -26,6 +26,7 @@
           extensions = [
             "rust-src"
             "rls-preview"
+            "rust-analyzer-preview"
           ];
           targets = [
             "x86_64-unknown-linux-gnu"

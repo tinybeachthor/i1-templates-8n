@@ -47,6 +47,7 @@ checksum = "3f9eec918d3f24069decb9af1554cad7c880e2da24a9afd88aca000531ab82c1"
 name = "i1-templates-8n"
 version = "0.1.0"
 dependencies = [
+ "i1-templates-8n-derive",
  "thiserror",
 ]
 
@@ -55,6 +56,7 @@ name = "i1-templates-8n-derive"
 version = "0.1.0"
 dependencies = [
  "darling",
+ "i1-templates-8n",
  "proc-macro2",
  "quote",
  "syn",

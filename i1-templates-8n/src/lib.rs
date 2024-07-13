@@ -1,10 +1,9 @@
 mod error;
 
-use std::fmt;
-
 pub use error::{Error, Result};
+pub use i1_templates_8n_derive::Template;
 
-pub trait Template: fmt::Display {
+pub trait Template {
     /// Helper method which allocates a new `String` and renders into it
     fn render(&self) -> Result<String> {
         let mut buf = String::new();

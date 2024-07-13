@@ -10,20 +10,20 @@ use syn::Ident;
 #[derive(FromDeriveInput)]
 #[darling(attributes(template), supports(struct_named, struct_unit), forward_attrs(allow, doc, cfg))]
 pub struct Receiver {
-    ident: syn::Ident,
+    ident: Ident,
     generics: syn::Generics,
-    data: ast::Data<(), FieldsReceiver>,
+    data: ast::Data<(), Field>,
     path: String,
 }
 impl Receiver {
-    fn get_fields(&self) -> Vec<String> {
+    fn get_fields(&self) -> Vec<Ident> {
         self.data
             .as_ref()
             .take_struct()
             .expect("Template only supports named structs and unit structs")
             .into_iter()
             .filter(|field| !field.skip)
-            .map(|field| field.name())
+            .map(Field::ident)
             .collect()
     }
     fn get_template(&self) -> String {
@@ -41,17 +41,24 @@ impl ToTokens for Receiver {
         let ident = &self.ident;
         let (impl_generics, ty_generics, where_clause) = self.generics.split_for_impl();
         let fields = self.get_fields();
-        let fields_len = fields.len();
 
         let template = self.get_template();
+        let template_len = template.len();
 
         tokens.extend(quote! {
             #[automatically_derived]
             impl #impl_generics #ident #ty_generics #where_clause {
-                const FIELDS: [&'static str; #fields_len] = [
-                    #(#fields),*
-                ];
                 const TEMPLATE: &'static str = #template;
+            }
+            #[automatically_derived]
+            impl #impl_generics ::i1_templates_8n::Template for #ident #ty_generics #where_clause {
+                fn render_into(&self, writer: &mut (impl std::fmt::Write + ?Sized)) -> ::i1_templates_8n::Result<()> {
+                    let #ident { #(#fields),* , .. } = self;
+                    std::write!(writer, #template)?;
+                    Ok(())
+                }
+
+                const SIZE_HINT: usize = #template_len;
             }
         })
     }
@@ -59,16 +66,15 @@ impl ToTokens for Receiver {
 
 #[derive(FromField)]
 #[darling(attributes(template))]
-struct FieldsReceiver {
+struct Field {
     ident: Option<Ident>,
     #[darling(default)]
     skip: bool,
 }
-impl FieldsReceiver {
-    fn name(&self) -> String {
+impl Field {
+    fn ident(&self) -> syn::Ident {
         self.ident
-            .as_ref()
+            .clone()
             .expect("Template only supports named fields")
-            .to_string()
     }
 }

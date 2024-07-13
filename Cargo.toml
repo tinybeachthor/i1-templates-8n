@@ -3,4 +3,5 @@ resolver = "2"
 
 members = [
   "i1-templates-8n",
+  "i1-templates-8n-derive",
 ]

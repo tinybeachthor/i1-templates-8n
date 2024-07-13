@@ -3,6 +3,7 @@
 use i1_templates_8n_derive::Template;
 
 #[derive(Template)]
+#[template(path = "hello_world.txt")]
 struct HelloWorld {
     hello: String,
     world: usize,
@@ -12,4 +13,5 @@ struct HelloWorld {
 
 fn main() {
     println!("{:?}", HelloWorld::FIELDS);
+    println!("{:?}", HelloWorld::TEMPLATE);
 }

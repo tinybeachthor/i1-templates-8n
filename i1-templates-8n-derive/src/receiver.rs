@@ -45,18 +45,16 @@ impl ToTokens for Receiver {
         let fields = self.get_fields();
 
         let template = self.get_template();
-        let template_len = template.len();
 
         tokens.extend(quote! {
             #[automatically_derived]
             impl #impl_generics ::i1_templates_8n::Template for #ident #ty_generics #where_clause {
-                fn render_into(&self, writer: &mut (impl std::fmt::Write + ?Sized)) -> ::i1_templates_8n::Result<()> {
-                    let #ident { #(#fields),* , .. } = self;
-                    std::write!(writer, #template)?;
-                    Ok(())
-                }
+                type Output = String;
 
-                const SIZE_HINT: usize = #template_len;
+                fn render(&self) -> Self::Output {
+                    let #ident { #(#fields),* , .. } = self;
+                    std::format!(#template)
+                }
             }
         })
     }

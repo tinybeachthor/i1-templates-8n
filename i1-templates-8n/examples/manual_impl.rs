@@ -1,20 +1,19 @@
-use i1_templates_8n::{Template, Result};
+use i1_templates_8n::Template;
 
 struct HelloWorld {
     hello: String,
     world: String,
 }
 impl Template for HelloWorld {
-    fn render_into(&self, writer: &mut (impl std::fmt::Write + ?Sized)) -> Result<()> {
+    type Output = String;
+
+    fn render(&self) -> Self::Output {
         let HelloWorld {
             hello,
             world,
         } = self;
-        std::write!(writer, "{hello} {world}!")?;
-        Ok(())
+        std::format!("{hello} {world}!")
     }
-
-    const SIZE_HINT: usize = 256;
 }
 
 fn main() {

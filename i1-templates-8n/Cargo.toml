@@ -4,5 +4,5 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-thiserror = "1.0"
 i1-templates-8n-derive = { path = "../i1-templates-8n-derive" }
+typed-langid = { path = "../typed-langid" }

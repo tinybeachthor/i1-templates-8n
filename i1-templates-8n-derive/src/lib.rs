@@ -1,5 +1,6 @@
 mod field;
 mod receiver;
+mod templates;
 
 use darling::FromDeriveInput;
 use proc_macro::TokenStream;

@@ -6,3 +6,6 @@ members = [
   "i1-templates-8n-derive",
   "typed-langid",
 ]
+
+[workspace.dependencies]
+strum = "0.26"

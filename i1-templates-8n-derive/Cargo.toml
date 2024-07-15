@@ -7,7 +7,9 @@ edition = "2021"
 proc-macro = true
 
 [dependencies]
+typed-langid = { path = "../typed-langid" }
 darling = "0.20"
 proc-macro2 = "1.0"
 quote = "1.0"
 syn = "2.0"
+strum = { workspace = true }

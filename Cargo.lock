@@ -64,7 +64,9 @@ dependencies = [
  "darling",
  "proc-macro2",
  "quote",
+ "strum",
  "syn",
+ "typed-langid",
 ]
 
 [[package]]

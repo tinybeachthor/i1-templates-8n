@@ -1,13 +1,10 @@
-use std::env;
-use std::fs;
-use std::path::PathBuf;
-
 use darling::{ast, FromDeriveInput};
 use proc_macro2::TokenStream;
 use quote::{quote, ToTokens};
 use syn::Ident;
 
 use crate::field::Field;
+use crate::templates::Templates;
 
 #[derive(FromDeriveInput)]
 #[darling(attributes(template), supports(struct_named, struct_unit), forward_attrs(allow, doc, cfg))]
@@ -28,34 +25,26 @@ impl Receiver {
             .map(Field::ident)
             .collect()
     }
-    fn get_template(&self) -> String {
-        let root = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
-        let path = root.join("templates").join(self.name.clone());
-
-        let template = fs::read_to_string(path)
-            .expect("Could not read template from file");
-
-        template
-    }
 }
 impl ToTokens for Receiver {
     fn to_tokens(&self, tokens: &mut TokenStream) {
         let ident = &self.ident;
         let (impl_generics, ty_generics, where_clause) = self.generics.split_for_impl();
         let fields = self.get_fields();
+        let templates = Templates::find_by_name(&self.name);
 
-        let template = self.get_template();
+        for (ident_lang, template) in templates {
+            tokens.extend(quote! {
+                #[automatically_derived]
+                impl #impl_generics ::i1_templates_8n::Template<::i1_templates_8n::typed_langid::#ident_lang> for #ident #ty_generics #where_clause {
+                    type Output = String;
 
-        tokens.extend(quote! {
-            #[automatically_derived]
-            impl #impl_generics ::i1_templates_8n::Template<::i1_templates_8n::typed_langid::En> for #ident #ty_generics #where_clause {
-                type Output = String;
-
-                fn render(&self, _lang: ::i1_templates_8n::typed_langid::En) -> Self::Output {
-                    let #ident { #(#fields),* , .. } = self;
-                    std::format!(#template)
+                    fn render(&self, _lang: ::i1_templates_8n::typed_langid::#ident_lang) -> Self::Output {
+                        let #ident { #(#fields),* , .. } = self;
+                        std::format!(#template)
+                    }
                 }
-            }
-        })
+            })
+        }
     }
 }

@@ -5,6 +5,7 @@ members = [
   "i1-templates-8n",
   "i1-templates-8n-derive",
   "typed-langid",
+  "example",
 ]
 
 [workspace.dependencies]

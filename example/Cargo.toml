@@ -1,0 +1,7 @@
+[package]
+name = "example"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+i1-templates-8n = { path = "../i1-templates-8n" }

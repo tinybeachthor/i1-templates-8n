@@ -1,4 +1,4 @@
-use i1_templates_8n::Template;
+use i1_templates_8n::{Template, typed_langid};
 
 #[derive(Template)]
 #[template(name = "hello_world.txt")]
@@ -15,5 +15,5 @@ fn main() {
         world: "Galaxy".to_string(),
         _secret: 42,
     };
-    println!("{:?}", x.render());
+    println!("{:?}", x.render(typed_langid::En));
 }

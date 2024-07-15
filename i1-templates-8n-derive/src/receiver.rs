@@ -48,10 +48,10 @@ impl ToTokens for Receiver {
 
         tokens.extend(quote! {
             #[automatically_derived]
-            impl #impl_generics ::i1_templates_8n::Template for #ident #ty_generics #where_clause {
+            impl #impl_generics ::i1_templates_8n::Template<::i1_templates_8n::typed_langid::En> for #ident #ty_generics #where_clause {
                 type Output = String;
 
-                fn render(&self) -> Self::Output {
+                fn render(&self, _lang: ::i1_templates_8n::typed_langid::En) -> Self::Output {
                     let #ident { #(#fields),* , .. } = self;
                     std::format!(#template)
                 }
